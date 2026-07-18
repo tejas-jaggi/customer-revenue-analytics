@@ -1,0 +1,22 @@
+campaign_key,campaign_name,campaign_type,start_date,end_date,discount_depth,season,target_audience,is_active_flag
+1,Spring Collection Launch 2023,Seasonal Launch,2023-02-15,2023-03-15,None,Winter,All Customers,True
+2,Summer Sale 2023,Promotional Sale,2023-07-05,2023-07-25,Moderate,Summer,All Customers,True
+3,Back-to-School 2023,Promotional Sale,2023-08-01,2023-08-21,Moderate,Summer,All Customers,True
+4,Black Friday 2023,Promotional Sale,2023-11-24,2023-11-26,Deep,Fall,All Customers,True
+5,Cyber Monday 2023,Promotional Sale,2023-11-27,2023-11-27,Deep,Fall,All Customers,True
+6,Holiday Collection 2023,Seasonal Launch,2023-11-01,2023-12-24,Light,Fall,All Customers,True
+7,January Clearance 2023,Clearance,2023-01-02,2023-01-21,Deepest,Winter,All Customers,True
+8,Spring Collection Launch 2024,Seasonal Launch,2024-02-15,2024-03-15,None,Winter,All Customers,True
+9,Summer Sale 2024,Promotional Sale,2024-07-05,2024-07-25,Moderate,Summer,All Customers,True
+10,Back-to-School 2024,Promotional Sale,2024-08-01,2024-08-21,Moderate,Summer,All Customers,True
+11,Black Friday 2024,Promotional Sale,2024-11-29,2024-12-01,Deep,Fall,All Customers,True
+12,Cyber Monday 2024,Promotional Sale,2024-12-02,2024-12-02,Deep,Winter,All Customers,True
+13,Holiday Collection 2024,Seasonal Launch,2024-11-01,2024-12-24,Light,Fall,All Customers,True
+14,January Clearance 2024,Clearance,2024-01-02,2024-01-21,Deepest,Winter,All Customers,True
+15,Spring Collection Launch 2025,Seasonal Launch,2025-02-15,2025-03-15,None,Winter,All Customers,True
+16,Summer Sale 2025,Promotional Sale,2025-07-05,2025-07-25,Moderate,Summer,All Customers,True
+17,Back-to-School 2025,Promotional Sale,2025-08-01,2025-08-21,Moderate,Summer,All Customers,True
+18,Black Friday 2025,Promotional Sale,2025-11-28,2025-11-30,Deep,Fall,All Customers,True
+19,Cyber Monday 2025,Promotional Sale,2025-12-01,2025-12-01,Deep,Winter,All Customers,True
+20,Holiday Collection 2025,Seasonal Launch,2025-11-01,2025-12-24,Light,Fall,All Customers,True
+21,January Clearance 2025,Clearance,2025-01-02,2025-01-21,Deepest,Winter,All Customers,True

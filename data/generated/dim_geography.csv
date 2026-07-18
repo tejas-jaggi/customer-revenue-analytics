@@ -1,0 +1,47 @@
+geography_key,city,state,region,country,postal_code
+1,New York,NY,Northeast,United States,10001
+2,Brooklyn,NY,Northeast,United States,11201
+3,Buffalo,NY,Northeast,United States,14202
+4,Boston,MA,Northeast,United States,02108
+5,Cambridge,MA,Northeast,United States,02138
+6,Philadelphia,PA,Northeast,United States,19102
+7,Pittsburgh,PA,Northeast,United States,15222
+8,Newark,NJ,Northeast,United States,07102
+9,Jersey City,NJ,Northeast,United States,07302
+10,Hartford,CT,Northeast,United States,06103
+11,Stamford,CT,Northeast,United States,06901
+12,Chicago,IL,Midwest,United States,60601
+13,Naperville,IL,Midwest,United States,60540
+14,Columbus,OH,Midwest,United States,43215
+15,Cleveland,OH,Midwest,United States,44113
+16,Cincinnati,OH,Midwest,United States,45202
+17,Detroit,MI,Midwest,United States,48226
+18,Ann Arbor,MI,Midwest,United States,48104
+19,Milwaukee,WI,Midwest,United States,53202
+20,Minneapolis,MN,Midwest,United States,55401
+21,St. Paul,MN,Midwest,United States,55102
+22,St. Louis,MO,Midwest,United States,63101
+23,Houston,TX,South,United States,77002
+24,Austin,TX,South,United States,78701
+25,Dallas,TX,South,United States,75201
+26,San Antonio,TX,South,United States,78205
+27,Miami,FL,South,United States,33131
+28,Orlando,FL,South,United States,32801
+29,Tampa,FL,South,United States,33602
+30,Atlanta,GA,South,United States,30303
+31,Charlotte,NC,South,United States,28202
+32,Raleigh,NC,South,United States,27601
+33,Nashville,TN,South,United States,37203
+34,Richmond,VA,South,United States,23219
+35,Los Angeles,CA,West,United States,90012
+36,San Francisco,CA,West,United States,94102
+37,San Diego,CA,West,United States,92101
+38,Sacramento,CA,West,United States,95814
+39,Seattle,WA,West,United States,98101
+40,Portland,OR,West,United States,97201
+41,Phoenix,AZ,West,United States,85004
+42,Tucson,AZ,West,United States,85701
+43,Denver,CO,West,United States,80202
+44,Boulder,CO,West,United States,80302
+45,Las Vegas,NV,West,United States,89101
+46,Reno,NV,West,United States,89501

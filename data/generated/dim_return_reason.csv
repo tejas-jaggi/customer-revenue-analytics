@@ -1,0 +1,7 @@
+return_reason_key,reason_code,reason_description,is_controllable
+1,WRONG_SIZE,Wrong Size,True
+2,DEFECTIVE_QUALITY,Defective/Quality Issue,True
+3,NOT_AS_DESCRIBED,Not as Described,True
+4,CHANGED_MIND,Changed Mind,False
+5,LATE_DELIVERY,Late Delivery,True
+6,OTHER,Other,False

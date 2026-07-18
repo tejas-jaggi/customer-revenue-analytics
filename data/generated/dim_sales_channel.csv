@@ -1,0 +1,4 @@
+sales_channel_key,channel_name,channel_type
+1,Website,Owned
+2,Mobile App,Owned
+3,Marketplace,Third-Party
