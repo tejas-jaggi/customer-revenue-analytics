@@ -4,7 +4,7 @@ A production-grade analytical data warehouse for a fictional direct-to-consumer 
 
 > **Is our growth actually coming from customers who stay — or are we renting revenue from acquisition spend?**
 
-This repository is a **certified, fully reproducible dimensional warehouse**: a fact-constellation schema over three years of deterministically generated synthetic transaction history, with every table validated against its specification *and* the warehouse validated against itself. It is engineered the way a real analytics-engineering team would build it — documentation-first, phase-gated, and validated at every layer — not the way a class assignment is thrown together.
+This repository is a **certified, fully reproducible dimensional warehouse**: a fact-constellation schema over three years of deterministically generated synthetic transaction history, with every table validated against its specification *and* the warehouse validated against itself. It is engineered the way a real analytics-engineering team would build it — documentation-first, phase-gated, and validated at every layer.
 
 <!-- BADGES: replace OWNER/REPO once published. These render once the repo is public. -->
 ![Status](https://img.shields.io/badge/status-v1.0%20warehouse%20certified-brightgreen)
@@ -47,7 +47,7 @@ This repository is a **certified, fully reproducible dimensional warehouse**: a 
 
 **Solstice Apparel Co.** is a fictional D2C apparel and lifestyle brand with three full fiscal years of history (2023–2025) across its website, mobile app, and a third-party marketplace. This project builds the analytical warehouse that its finance, marketing, retention, merchandising, and operations teams would use to understand revenue quality, customer value, retention, and returns.
 
-Because no real transactional data exists, the project includes a **deterministic synthetic-data generation framework** that produces a believable, internally-consistent business — with seasonality, campaign lift, persona-driven purchasing, and apparel-typical return behavior — rigorous enough that the resulting KPIs land inside pre-declared validation targets rather than being reverse-engineered to look good.
+Because no real transactional data exists, the project includes a **deterministic synthetic-data generation framework** that produces a believable, internally-consistent business with seasonality, campaign lift, persona-driven purchasing, and apparel-typical return behavior, rigorous enough that the resulting KPIs land inside pre-declared validation targets rather than being reverse-engineered to look good.
 
 | At a glance | |
 |---|---|
@@ -103,20 +103,20 @@ Solstice sells five categories (Womenswear, Menswear, Outerwear, Footwear, Acces
 
 ```
                           ┌──────────────────────────────────────────────┐
-                          │              CONFORMED DIMENSIONS             │
-                          │  Dim_Date  Dim_Customer  Dim_Product          │
-                          │  Dim_Geography  Dim_Marketing_Channel         │
-                          │  Dim_Sales_Channel  Dim_Campaign              │
-                          │  Dim_Return_Reason                            │
+                          │              CONFORMED DIMENSIONS            │
+                          │  Dim_Date  Dim_Customer  Dim_Product         │
+                          │  Dim_Geography  Dim_Marketing_Channel        │
+                          │  Dim_Sales_Channel  Dim_Campaign             │
+                          │  Dim_Return_Reason                           │
                           └──────────────────────────────────────────────┘
                                  │            │            │           │
               ┌──────────────────┘   ┌────────┘     ┌──────┘    ┌──────┘
               ▼                      ▼              ▼           ▼
-   ┌───────────────────┐  ┌───────────────────┐  ┌───────────┐  ┌──────────────────────────────┐
-   │    Fact_Orders    │  │ Fact_Order_Lines  │  │Fact_Returns│  │ Fact_Customer_Monthly_Snapshot│
-   │  (order grain)    │◄─│  (line grain)     │◄─│(return grn)│  │   (customer-month grain)      │
-   │  header revenue   │  │ product detail    │  │ per-line   │  │  derived state, no randomness │
-   └───────────────────┘  └───────────────────┘  └───────────┘  └──────────────────────────────┘
+   ┌───────────────────┐  ┌───────────────────┐  ┌─────────────┐  ┌────────────────────────────────┐
+   │    Fact_Orders    │  │ Fact_Order_Lines  │  │Fact_Returns │  │ Fact_Customer_Monthly_Snapshot │
+   │  (order grain)    │◄─│  (line grain)     │◄─│(return grn) │  │   (customer-month grain)       │
+   │  header revenue   │  │ product detail    │  │ per-line    │  │  derived state, no randomness  │
+   └───────────────────┘  └───────────────────┘  └─────────────┘  └────────────────────────────────┘
 ```
 
 Each fact is **additive at its own grain**; conformed dimensions let every fact be sliced the same way. Header revenue reconciles to line revenue *by construction* (a single shared simulation produces both), and the monthly snapshot reconciles to the transactional facts to the cent.
@@ -381,8 +381,6 @@ Generation order is **dependency-driven** and enforced by each generator's own d
 | 7 | Business Insights & Recommendations | ⬜ Planned |
 | 8 | Repository & Portfolio Finalization | ⬜ Planned |
 | 9 | Churn Prediction Model (stretch) | ⬜ Planned |
-
-*A Power BI dashboard phase was scoped and deliberately removed to keep the project focused on data-engineering and analytical depth. The warehouse remains BI-ready — the fan-out/additivity hazard is already quantified for any downstream visualization layer.*
 
 ---
 
