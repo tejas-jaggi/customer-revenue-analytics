@@ -3,7 +3,7 @@
 
 ## Project Status
 
-**Current Version:** v1.0 — Certified Warehouse
+**Current Version:** v1.0 — Certified Warehouse · **Phase 5 (SQL Analytics Layer) complete, 45/45 validations passing**
 
 This project builds a production-style analytical data warehouse for a fictional direct-to-consumer apparel company (Solstice Apparel Co.).
 
@@ -24,7 +24,7 @@ The project follows a documentation-first, phase-gated engineering methodology w
 - GitHub
 - Markdown
 
-Power BI was originally planned but intentionally removed from scope to prioritize deeper SQL analytics and customer analytics while maintaining a realistic project timeline.
+*A Power BI dashboard phase was originally planned but was intentionally removed from scope to prioritize deeper SQL analytics and customer analytics. The warehouse remains BI-ready — the Orders→Lines fan-out/additivity hazard is quantified (Phase 4 check 6.8) for any future visualization layer.*
 
 ---
 
@@ -36,11 +36,13 @@ Power BI was originally planned but intentionally removed from scope to prioriti
 | Phase 2 – Data Warehouse Design | ✅ Complete |
 | Phase 3 – Deterministic Synthetic Data Generation | ✅ Complete |
 | Phase 4 – Warehouse-wide Validation & Certification | ✅ Complete |
-| Phase 5 – SQL Analytics Layer | ⬜ Next |
-| Phase 6 – Advanced Customer Analytics | ⬜ Planned |
+| Phase 5 – SQL Analytics Layer (Sections A–G) + Synthesis | ✅ Complete & Closed |
+| Phase 6 – Advanced Customer Analytics | ⬜ Next |
 | Phase 7 – Business Insights & Executive Recommendations | ⬜ Planned |
 | Phase 8 – Repository & Portfolio Finalization | ⬜ Planned |
 | Phase 9 – Churn Prediction (Stretch Goal) | ⬜ Planned |
+
+*Phase 5 is fully closed: the Executive Synthesis (`docs/phase5_executive_synthesis.md`) and Completion Document (`docs/phase5_completion.md`) are delivered. Phase 6 continuation and opening prompt are prepared.*
 
 ---
 
@@ -72,203 +74,87 @@ while demonstrating production-quality engineering practices including:
 
 ## Phase 1 — Business Understanding ✅
 
-Established:
+Established business stakeholders, business questions, KPIs, the business glossary, and the Solstice Apparel context.
 
-- Business stakeholders
-- Business questions
-- KPIs
-- Business glossary
-- Solstice Apparel business context
-
-Deliverables
-
-- business_understanding.md
+Deliverables: `business_understanding.md`, `business_glossary.md`
 
 ---
 
 ## Phase 2 — Warehouse Architecture ✅
 
-Designed and documented:
+Designed and documented the fact-constellation schema (8 dimensions, 4 fact tables), data dictionary, and the engineering/design decisions behind them.
 
-- Fact constellation schema
-- Eight dimensions
-- Four fact tables
-- Data dictionary
-- Schema
-- Engineering decisions
-
-Deliverables
-
-- schema.sql
-- data_dictionary.md
-- data_warehouse_design.md
-- design_decisions.md
-- schema_changelog.md
+Deliverables: `schema.sql`, `data_dictionary.md`, `data_warehouse_design.md`, `design_decisions.md`, `schema_changelog.md`, `engineering_decision_log.md`
 
 ---
 
 ## Phase 3 — Synthetic Data Generation ✅
 
-Implemented deterministic generators for:
+Implemented deterministic generators for 8 dimensions (Date, Geography, Marketing Channel, Sales Channel, Campaign, Product, Return Reason, Customer) and 4 facts (Orders, Order Lines, Returns, Customer Monthly Snapshot).
 
-### Dimensions
+Generation characteristics: deterministic, seed-reproducible, transaction-safe, idempotent, fully documented.
 
-- Date
-- Geography
-- Marketing Channel
-- Sales Channel
-- Campaign
-- Product
-- Return Reason
-- Customer
-
-### Facts
-
-- Orders
-- Order Lines
-- Returns
-- Customer Monthly Snapshot
-
-Generation characteristics:
-
-- Deterministic
-- Seed reproducible
-- Transaction-safe
-- Idempotent
-- Fully documented
-
-Deliverables
-
-- Python generators
-- SQL load scripts
-- Verification suites
-- Validation suites
-- Build log
+Deliverables: `python/generators/`, `sql/generation/`, `sql/verification/`, `sql/validation/`, `docs/phase3_build_log.md`
 
 ---
 
 ## Phase 4 — Warehouse Certification ✅
 
-Warehouse-wide validation introduced:
+Warehouse-wide validation: structural integrity, vintage coherence, cross-grain reconciliation, KPI reconciliation, analytical readiness.
 
-- Structural integrity
-- Vintage coherence
-- Cross-grain reconciliation
-- KPI reconciliation
-- Analytical readiness
+Final certification: **62 checks · 60 PASS · 2 advisory findings · 0 blocking failures — CERTIFIED for analytics.**
 
-Final certification:
-
-- 62 validation checks
-- 60 PASS
-- 2 advisory findings
-- 0 blocking failures
-
-Warehouse status:
-
-**Certified for analytics.**
-
-Deliverables
-
-- Warehouse validation SQL
-- Validation runner
-- Phase 4 certification report
+Deliverables: `sql/validation/validate_warehouse_*.sql`, `python/validation/run_warehouse_validation.py`, `docs/phase4_validation_report.md`
 
 ---
 
-## Phase 5 — SQL Analytics Layer
+## Phase 5 — SQL Analytics Layer ✅
 
-Objective
+Business-facing analytical SQL answering executive questions, organized as modular section files under `sql/analytics/`, each query carrying a 13-field documentation header and exactly one validation (Type A regression against a certified anchor, or Type B independent recomputation).
 
-Build business-facing analytical SQL answering executive questions.
+Sections delivered:
 
-Topics include:
+- **A — Executive KPI Summary** (`01_executive_kpi_summary.sql`)
+- **B — Revenue Analysis** (`02_revenue_analysis.sql`)
+- **C — Product Performance** (`03_product_performance.sql`)
+- **D — Geographic Performance** (`04_geographic_performance.sql`)
+- **E — Marketing Performance & Acquisition Quality** (`05_marketing_performance.sql`)
+- **F — Customer Value & Retention** (`06_customer_value_retention.sql`)
+- **G — Returns & Value Leakage** (`07_returns_value_leakage.sql`)
 
-- Revenue trends
-- Channel performance
-- Product performance
-- Customer growth
-- Geographic analysis
-- Return analysis
-- Executive KPI dashboard queries
+Validation: **45/45 passing**, re-runnable via `python/validation/run_phase5_validation.py`.
 
-Deliverables
-
-- Reusable SQL analytics library
-- Business query documentation
+Deliverables: `sql/analytics/` (7 section files + `README.md` index), `docs/phase5_analytics_report.md`, `docs/phase5_build_log.md`, `docs/phase5_cross_section_insights.md`, `docs/phase5_executive_findings_matrix.md`, `docs/phase5_executive_synthesis.md`, `docs/phase5_completion.md`. **Phase 5 fully closed.**
 
 ---
 
-## Phase 6 — Advanced Customer Analytics
+## Phase 6 — Advanced Customer Analytics ⬜ Next
 
-Build:
+Build RFM segmentation, Customer Lifetime Value, cohort retention, Pareto analysis, customer concentration, and churn metrics — formalizing the behavioral segments Phase 5 previewed and naming the clusters Phase 5 detected but (by design) could not label.
 
-- RFM segmentation
-- Customer Lifetime Value
-- Cohort retention
-- Pareto analysis
-- Customer concentration
-- Churn metrics
-
-Deliverables
-
-- Advanced SQL analysis
-- Executive-ready analytical outputs
+Deliverables: advanced SQL analysis, executive-ready analytical outputs.
 
 ---
 
-## Phase 7 — Business Insights
+## Phase 7 — Business Insights ⬜ Planned
 
-Translate analysis into business recommendations.
+Translate analysis into business recommendations: marketing optimization, customer retention, revenue quality, product strategy, returns reduction. Seeded by the Phase 5 Executive Findings Matrix and the deferred holiday-plateau thread.
 
-Focus areas:
-
-- Marketing optimization
-- Customer retention
-- Revenue quality
-- Product strategy
-- Geographic expansion
-- Return reduction
-
-Deliverables
-
-- Executive findings
-- Business recommendations
+Deliverables: executive findings, business recommendations.
 
 ---
 
-## Phase 8 — Repository Finalization
+## Phase 8 — Repository Finalization ⬜ Planned
 
-Finalize the public portfolio repository.
+Documentation review, repository audit, GitHub release, screenshots (ER diagram export, validation-runner captures), portfolio polish, README placeholder completion.
 
-Includes:
-
-- Documentation review
-- Repository audit
-- GitHub release
-- Screenshots
-- Portfolio polish
-
-Deliverables
-
-- Production README
-- Version 1.0 release
-- Portfolio-ready repository
+Deliverables: production README, v1.x release, portfolio-ready repository.
 
 ---
 
-## Phase 9 — Churn Prediction (Stretch Goal)
+## Phase 9 — Churn Prediction (Stretch Goal) ⬜ Planned
 
-Potential machine learning extension using the certified warehouse.
-
-Possible work:
-
-- Feature engineering
-- Baseline models
-- Model evaluation
-- Business interpretation
-
-This phase is intentionally optional and does not affect the completion of the warehouse project.
+Optional ML extension on the certified warehouse: feature engineering (the snapshot fact is the feature/label source), baseline models vs the rule-based `churn_risk_flag`, evaluation, business interpretation. Does not affect warehouse-project completion.
 
 ---
 
@@ -276,27 +162,7 @@ This phase is intentionally optional and does not affect the completion of the w
 
 Every phase follows the same workflow:
 
-Design
-
-↓
-
-Implementation
-
-↓
-
-Verification
-
-↓
-
-Business Validation
-
-↓
-
-Evidence
-
-↓
-
-Phase Gate
+Design → Implementation → Verification → Business Validation → Evidence → Phase Gate
 
 No phase advances until the previous phase is successfully completed.
 
@@ -319,6 +185,4 @@ The two projects intentionally complement one another while demonstrating differ
 
 # Current Focus
 
-The warehouse has been fully certified.
-
-The next milestone is **Phase 5 — SQL Analytics**, where the certified warehouse begins producing business insights.
+Phase 5 (SQL Analytics Layer) is complete, validated (45/45), and formally closed — the Executive Synthesis and Completion Document are delivered, and the Phase 6 continuation and opening prompt are prepared. The project now proceeds to **Phase 6 — Advanced Customer Analytics**.
