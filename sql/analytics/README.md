@@ -17,15 +17,16 @@ The continuation doc originally specified a single `sql/analytics.sql`. This lay
 | `05_marketing_performance.sql` | E — Marketing Performance & Acquisition Quality | Which channels acquire the most *valuable* customers? | VP Marketing | 6 |
 | `06_customer_value_retention.sql` | F — Customer Value & Retention | Who creates value, and why do repeats drive 82.4%? | Retention / CFO | 6 |
 | `07_returns_value_leakage.sql` | G — Returns & Value Leakage | Where is value leaking, and what should be fixed first? | COO / CFO | 7 |
-| | | | **Total** | **45** |
+| `08_rfm_segmentation.sql` | 6.1 — RFM Segmentation | Which customers are Champions, Loyal, At Risk, Lost? | Marketing / Retention | 4 |
+| | | | **Total** | **49** |
 
 ## Running the analytics
 
 The section files are read-only analytical SQL against `data/database/solstice_apparel.duckdb`. To re-verify that the whole layer still reconciles to the certified warehouse:
 
 ```bash
-python python/validation/run_phase5_validation.py
-# → 45/45 validations passed
+python python/validation/run_analytics_validation.py
+# → 49/49 validations passed
 ```
 
 ## Governing rules (see `docs/phase5_build_log.md`)

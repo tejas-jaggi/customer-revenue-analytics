@@ -188,6 +188,35 @@ customer-revenue-analytics/
 
 ---
 
+## Analytics Layer
+
+The certified warehouse is queried through a modular analytical SQL layer under [`sql/analytics/`](sql/analytics/) — one section file per business theme, each carrying a 13-field documentation header and its own validation (Type A regression against a certified KPI, or Type B independent recomputation). Phase 5 delivered the seven-section business analytics (A–G); Phase 6 is extending it with advanced customer analytics.
+
+| File | Section |
+|---|---|
+| `01_executive_kpi_summary.sql` | Executive KPI Summary |
+| `02_revenue_analysis.sql` | Revenue Analysis |
+| `03_product_performance.sql` | Product Performance |
+| `04_geographic_performance.sql` | Geographic Performance |
+| `05_marketing_performance.sql` | Marketing Performance |
+| `06_customer_value_retention.sql` | Customer Value & Retention |
+| `07_returns_value_leakage.sql` | Returns & Value Leakage |
+| `08_rfm_segmentation.sql` | RFM Segmentation |
+| `09_cohort_retention.sql` | Cohort Analytics *(planned)* |
+| `10_customer_lifetime_value.sql` | Historical Customer Lifetime Value *(planned)* |
+| `11_pareto_concentration.sql` | Pareto & Customer Concentration *(planned)* |
+| `12_behavioral_analytics.sql` | Behavioral Analytics *(planned)* |
+| `13_customer_portfolio_synthesis.sql` | Customer Portfolio Synthesis *(planned)* |
+
+The entire layer is re-validated with one command:
+
+```bash
+python python/validation/run_analytics_validation.py
+# → 49/49 validations passed
+```
+
+---
+
 ## Engineering Methodology
 
 Every phase follows the same gate, and no phase advances until the previous one passes it:
@@ -376,8 +405,8 @@ Generation order is **dependency-driven** and enforced by each generator's own d
 | 2 | Data Warehouse Design | ✅ Complete |
 | 3 | Synthetic Data Generation (8 dims + 4 facts) | ✅ Complete |
 | 4 | Warehouse-Wide Validation & Certification | ✅ Complete — **V1.0** |
-| 5 | SQL Analytics Layer (revenue, retention, product, geography) | ⬜ Next |
-| 6 | Advanced Customer Analytics (RFM, CLV, cohort, Pareto) | ⬜ Planned |
+| 5 | SQL Analytics Layer (Sections A–G) | ✅ Complete |
+| 6 | Advanced Customer Analytics (RFM, CLV, cohort, Pareto) | 🔄 In progress |
 | 7 | Business Insights & Recommendations | ⬜ Planned |
 | 8 | Repository & Portfolio Finalization | ⬜ Planned |
 | 9 | Churn Prediction Model (stretch) | ⬜ Planned |
