@@ -56,3 +56,7 @@ Python utilities must explicitly specify:
 
 ```python
 encoding="utf-8"
+
+## Design Review checklist
+
+Analytical Necessity Check: Before implementation, explicitly explain why the proposed section provides unique business value beyond previously completed analyses and identify what new decision it enables.

@@ -209,3 +209,67 @@ A Historical-CLV-by-cohort view is deliberately **not** produced here. Section 6
 
 ### Phase Gate — Section 6.3
 **APPROVED for production use.** 5/5 validations pass (Type A reconciliation to certified Net Revenue and the CLV×RFM total; Type B dual-source reconciliation, three-tier partition, and value-class coverage). The section measured historical value strictly as an outcome, kept *Historical CLV* and *Average Customer Value* rigorously distinct, surfaced the non-obvious zero-net-buyer population, and produced the CLV×RFM bridge that carries into the Portfolio Synthesis. The per-customer Historical CLV vector (`v_historical_clv`) is the direct input to Section 6.4's concentration analysis.
+
+---
+
+## Section 6.4 — Pareto & Customer Concentration
+
+**Status: ✅ approved for production. 5/5 validations pass, including a cross-phase regression that reproduces the certified Phase 5 F.3 finding exactly (50.1%).**
+
+### Executive Concentration Summary
+
+- **Gini coefficient: 0.670** (complete portfolio, 8,000 customers) — a moderate-to-high degree of value concentration.
+- **Top 20% of customers hold 70.3% of portfolio value**; the top 10% hold 51.0% and the top 1% hold 11.8%.
+- **Overall interpretation:** value is meaningfully concentrated in a minority of customers, which is a *structural characteristic* of this portfolio rather than a defect. Moderate-to-high customer-value concentration is commonly observed across many customer portfolios, particularly in retail, where a small share of repeat buyers typically accounts for a disproportionate share of spend. A concentration figure of this magnitude is not, on its own, evidence of business distress, and it should not be read as one.
+- **Concentration is not churn risk — the two are different things.** Concentration describes *how value is distributed today* across the customer base. Churn risk describes *the probability that customers stop buying*. A highly concentrated portfolio of deeply loyal, actively purchasing customers carries very different exposure from an equally concentrated portfolio whose top customers are lapsing. This section measures the former only; nothing here estimates any customer's likelihood of leaving, and no such inference should be drawn from these figures. (Section 6.2's retention evidence — a durable ~13% monthly repeat floor — and any future churn modeling are where that question belongs.)
+- **Business implication:** the concentration confirms that the retention priorities already identified are aimed at the correct population. Because roughly 1,600 customers (the top 20%) account for about 70% of portfolio value, retention investment directed at that group protects the majority of the revenue base; conversely, dependence on that group should be *monitored* — the Gini is now a trackable KPI for exactly that purpose.
+
+### What this section adds (and deliberately does not repeat)
+
+Section 6.3 asked **"what is each customer worth?"** — a measurement question producing a per-customer value. Section 6.4 asks **"how concentrated is portfolio value?"** — a structural question about the portfolio as a system. The distinction is maintained throughout: 6.4 consumes 6.3's Historical CLV directly (`v_historical_clv`) and never recomputes customer value. The new capability introduced here is **inequality measurement** — the Lorenz curve and Gini coefficient — which has no per-customer analogue and which no prior section provides.
+
+Deliberately excluded: HHI and CR4/CR8 (industrial-organization metrics built for markets with a handful of firms; at 8,000 customers they produce near-zero, uninterpretable values), the Palma ratio, and a standalone decile table (that would duplicate Phase 5 F.3 — decile points appear here only as Lorenz coordinates).
+
+### Analytical basis — declared
+
+Every figure states its population. **Primary base: the complete customer portfolio (8,000).** Concentration risk is a question about the whole portfolio, and customers who were acquired but generated no value are a real part of it; excluding them would flatter the numbers. **Reconciliation base: the certified Phase 5 purchaser population (7,711)**, published so earlier certified findings remain directly comparable.
+
+### 6.4.2 — Top-N concentration ladder
+
+| Analytical basis | Top 1% | Top 5% | Top 10% | Top 20% | Top 50% |
+|---|---|---|---|---|---|
+| **Primary — complete portfolio (8,000)** | 11.8% | 35.0% | 51.0% | **70.3%** | 92.5% |
+| Reconciliation — purchaser base (7,711) | 11.4% | 34.2% | 50.0% | 69.2% | 91.8% |
+
+The two bases differ by roughly one percentage point at each rung — the gap is the effect of the 289 non-purchasers and 677 zero-net buyers, who add customers to the denominator without adding value. **Publishing both prevents an apparent contradiction:** the same "top decile" concept legitimately reads 51.0% on the complete portfolio and 50.0–50.1% on the purchaser base, and a single unlabeled figure would look like a discrepancy against Phase 5.
+
+### 6.4.3 — Cross-phase reconciliation to Phase 5 F.3
+
+Phase 5 F.3 certified that **the top decile of the 7,711 purchasers held 50.1% of net revenue.** Reproducing that exact construction on the Historical CLV vector returns **50.1%** — an exact match, validated as a Type A cross-phase regression. This is the section's most important integrity check: it proves the Phase 6 CLV vector and the Phase 5 revenue measurement describe the same underlying reality, and that 6.4 extends rather than supersedes certified work.
+
+*(Methodological footnote: the ladder's "top 10%" on the purchaser base reads 50.0% while the decile construction reads 50.1%. The difference is boundary handling — a percentage threshold admits 771 customers where `NTILE(10)` assigns 772. Both are correct for their construction; the F.3 anchor is matched by reproducing F.3's construction.)*
+
+### 6.4.4 — Lorenz curve
+
+Cumulative share of portfolio value by cumulative share of customers (ascending by value):
+
+| Customers (cumulative) | 10% | 20% | 30% | 40% | 50% | 60% | 70% | 80% | 90% | 100% |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Value (cumulative) | 0.00% | 0.75% | 2.28% | 4.43% | 7.50% | 11.92% | 18.63% | 29.69% | 49.03% | 100% |
+
+The curve is **flat across the first decile** — the bottom 10% of the portfolio holds exactly 0% of value, which is the 966 zero-value customers (289 never activated, 677 fully refunded) appearing as a genuine feature of the portfolio rather than a computational artifact. It then rises slowly and steepens sharply in the final deciles: **the bottom half of customers accounts for 7.5% of value, while the top decile alone accounts for the remaining 51%.**
+
+### 6.4.5 — Gini coefficient
+
+| Analytical basis | Gini |
+|---|---|
+| **Primary — complete portfolio (8,000)** | **0.6698** |
+| Reconciliation — purchaser base (7,711) | 0.6574 |
+
+The primary-base figure is higher precisely because it includes the zero-value customers, which legitimately increase measured inequality. **Interpreting the number responsibly:** the Gini is a *descriptive statistic about distribution shape*, not a performance score, a risk rating, or a distress signal. Moderate-to-high concentration of this kind is commonly observed in customer portfolios, and a figure near 0.67 is best used as a **baseline to track over time** — a rising Gini would indicate growing dependence on fewer customers, a falling one a broadening base. Its value to management is as a monitorable trend, not as a pass/fail threshold, and no universal benchmark is asserted here.
+
+### Result Sanity Review
+The ladder is monotonically non-decreasing and bounded; the Lorenz curve terminates at exactly 100%; both Gini figures fall inside [0,1] with the complete-portfolio value correctly exceeding the purchaser-base value; and the Phase 5 F.3 anchor reproduces exactly. The three metrics agree with one another — the ladder, curve, and coefficient describe the same distribution from three angles. Nothing anomalous.
+
+### Phase Gate — Section 6.4
+**APPROVED for production use.** 5/5 validations pass (Type A total-value and base reconciliation plus the Phase 5 F.3 cross-phase regression; Type B ladder monotonicity, Lorenz endpoint, and Gini bounds). The section introduced genuine new capability — portfolio-level inequality measurement — while consuming rather than recomputing Historical CLV, declared its analytical basis at every figure, preserved comparability with certified Phase 5 findings, and kept concentration rigorously distinct from churn risk. The Gini and top-N ladder are headline inputs to the Portfolio Synthesis (6.6).

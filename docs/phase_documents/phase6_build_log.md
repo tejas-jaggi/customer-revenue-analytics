@@ -158,3 +158,54 @@ CLV × RFM uses the segments discovered in 6.1; no generation persona named or i
 Customer-grain aggregation composing existing structure + certified anchors + the 6.1 views. Three-tier reporting and descriptive value classes are documented analytical/interpretive methods, not reusable engineering patterns.
 
 ---
+
+## Section 6.4 — Pareto & Customer Concentration
+
+**Status: complete, executed, validated. Phase Gate: APPROVED.**
+
+### Deliverable
+`sql/analytics/11_pareto_concentration.sql` — 6.4.1 (concentration base & reconciliation), 6.4.2 (top-N ladder), 6.4.3 (Phase 5 F.3 cross-phase reconciliation), 6.4.4 (Lorenz curve), 6.4.5 (Gini coefficient). Consumes `v_historical_clv` from 6.3; creates no new views.
+
+### Analytical Necessity (Operating Procedure requirement)
+6.3 answers "what is each customer worth?" (measurement, per-customer). 6.4 answers "how concentrated is portfolio value?" (structure, population-level). **New capability: inequality measurement** (Lorenz + Gini), which has no per-customer analogue. **New decisions enabled:** concentration-risk quantification as a trackable KPI, key-account thresholds, revenue-at-risk sizing. **Overlap removed:** a standalone decile table was excluded as duplicative of Phase 5 F.3 — decile points appear only as Lorenz coordinates.
+
+### Approved design decisions implemented
+1. **Dual base with explicit declaration** — primary: complete portfolio (8,000); reconciliation: certified Phase 5 purchaser base (7,711). Every figure states its basis.
+2. **Consumes `v_historical_clv`** — value never recomputed; 6.4 extends 6.3.
+3. **Primary outputs:** top-N ladder, Lorenz curve, Gini coefficient.
+4. **Excluded:** HHI, CR4/CR8, Palma ratio (no material executive decision support at this portfolio scale).
+5. **CLV/Concentration separation** maintained throughout the report.
+6. `sql/analytics/README.md` updated to current repository state (modules 08–11, validation total corrected).
+
+### Execution result (5 validations, against frozen v1.0.0)
+
+| Validation | Type | Result |
+|---|---|---|
+| 6.4.1 base=8,000 & total CLV=$1,782,971.91 | A | ✅ PASS |
+| 6.4.2 top-N ladder monotonic and bounded | B | ✅ PASS |
+| 6.4.3 **Phase 5 F.3 cross-phase regression = 50.1%** | A | ✅ PASS |
+| 6.4.4 Lorenz curve terminates at 100% | B | ✅ PASS |
+| 6.4.5 Gini bounded [0,1], primary > purchaser base | B | ✅ PASS |
+
+**5/5 pass. Whole analytics layer now 65/65.**
+
+### Bug caught during implementation
+The 6.4.4 Lorenz validation initially nested a window function inside another window's ORDER BY (`SUM(...) OVER (ORDER BY ROW_NUMBER() OVER (...))`), which DuckDB rejects ("window functions are not allowed in window definitions"). Diagnosed and restructured as a CTE chain; re-ran clean. The analytical query was correct — the validation was malformed, caught by execution as P5-2 intends.
+
+### Key finding
+Concentration is moderate-to-high and structurally consistent across three independent measures. Complete portfolio: **top 1% = 11.8%, top 10% = 51.0%, top 20% = 70.3%, Gini = 0.6698**. Purchaser base: Gini 0.6574, top 20% 69.2%. **The Phase 5 F.3 anchor reproduces exactly (50.1%)**, proving the Phase 6 CLV vector and Phase 5 revenue measurement describe the same reality. The Lorenz curve is flat across the first decile (the 966 zero-value customers) — a genuine portfolio feature, not an artifact.
+
+### Interpretation discipline
+The report explicitly separates **concentration** (how value is distributed today) from **churn risk** (probability customers stop buying) and asserts no universal Gini benchmark — the coefficient is framed as a baseline to track over time, with the note that moderate-to-high concentration is commonly observed in customer portfolios and does not by itself indicate distress.
+
+### Regression Anchors Used
+**Type A:** Net Revenue ($1,782,971.91) · Customer Base (8,000) · **Phase 5 F.3 top-decile share (50.1% on the 7,711-purchaser base) — cross-phase regression**.
+**Type B:** ladder monotonicity (top1≤top5≤top10≤top20≤top50≤100) · Lorenz endpoint (terminates at 100%) · Gini bounds and expected ordering between bases.
+
+### ED-009 compliance
+No persona inference; concentration is computed purely from observed Historical CLV.
+
+### No new Engineering Decision
+Window-function aggregation over an existing view composing certified anchors. The Gini computation is a standard formula implemented in SQL — a documented analytical method, not a reusable engineering pattern.
+
+---

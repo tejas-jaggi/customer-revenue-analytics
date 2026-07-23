@@ -15,6 +15,9 @@
 ### Section 6.3 — Historical Customer Lifetime Value
 **Insight:** Historical CLV (observed, not predicted) splits the base into three economically distinct tiers: 289 non-purchasers, **677 zero-net buyers** (purchased then fully refunded — a non-obvious population), and 7,034 positive-CLV customers. Positive CLV is heavily right-skewed (median $102 vs mean $253); descriptive value classes show the **Elite class (7.6% of value-generating customers) holds 41.3% of retained value**. The CLV × RFM bridge puts dollars on scores: Champions average $849 (median $642), $1.0M total = 56.1% of portfolio value. Dual-source validated (snapshot = base-fact = certified $1,782,971.91).
 
+### Section 6.4 — Pareto & Customer Concentration
+**Insight:** Portfolio value is moderately-to-highly concentrated, measured three consistent ways. Complete portfolio (8,000): **top 1% = 11.8%, top 10% = 51.0%, top 20% = 70.3%, Gini = 0.6698**; purchaser base (7,711): Gini 0.6574. The **certified Phase 5 F.3 anchor reproduces exactly (top decile = 50.1%)**, proving the Phase 6 CLV vector and Phase 5 revenue measurement describe the same reality. The Lorenz curve is flat across the first decile — the 966 zero-value customers — and the bottom half of the portfolio holds just 7.5% of value. Concentration is framed as a trackable baseline, explicitly NOT as churn risk and with no universal benchmark asserted.
+
 ---
 
 ## ✅ Resolved Findings
@@ -23,11 +26,11 @@
 | Formal customer segmentation exists (was behavioral tiers only in Phase 5) | 6.1 | RFM taxonomy with published names + analytical codes; reconciles to certified Net Revenue |
 | Cohort retention / revenue / AOV / value curves | 6.2 | Longitudinal view built; monthly retention stabilizes ~13% from month 3; all measures reconcile to certified anchors |
 | Historical CLV distribution + CLV by segment | 6.3 | Three-tier distribution + descriptive value classes; CLV × RFM bridge (Champions $849 avg / 56.1% of portfolio); dual-source reconciled to certified Net Revenue |
+| Formal concentration (top 1/5/10/20/50%, Lorenz, Gini) | 6.4 | Gini 0.6698 (complete portfolio) / 0.6574 (purchasers); top 20% = 70.3%; Phase 5 F.3 anchor reproduced exactly at 50.1% |
 
 ## ❓ Open Findings
 | Finding | Raised | Resolves in | Status |
 |---|---|---|---|
-| Formal concentration (top 1/5/10/20/50%, Gini) | 6.1 | 6.4 | Open |
 | Behavioral profile of RFM segments (cadence, returns, channel) | 6.1 | 6.5 | Open |
 
 ## ⏸️ Deferred Findings
@@ -45,6 +48,8 @@
 - **6.3 → 6.4:** the per-customer Historical CLV vector (`v_historical_clv`) is the DIRECT input to Pareto/Lorenz/Gini — 6.4 consumes it rather than recomputing value.
 - **6.3 ↔ 6.1:** CLV × RFM is the principal scores-to-dollars bridge; it and the maturity discipline from 6.2 are the two main threads feeding 6.6.
 - **6.3 → 6.5:** descriptive Historical Value Classes give Behavioral Analytics a value axis — conditional on value class explaining behavioral differences.
+- **6.4 ↔ Phase 5 F.3:** cross-phase regression — 6.4 reproduces the certified top-decile 50.1% exactly, demonstrating Phase 6 extends rather than supersedes certified Phase 5 work.
+- **6.4 → 6.6:** Gini and the top-N ladder are headline Portfolio Synthesis inputs; concentration is the structural counterpart to 6.3's per-customer value.
 
 ## ⚠️ Contradictions
 - None to date. (6.1 agrees with Phase 5 F; 6.2 agrees with both.)
@@ -55,6 +60,7 @@
 - The second-purchase conversion pool is now segment-identified (At Risk + Lost = 3,071 one-time customers) for targeted lifecycle campaigns.
 - Retention is durable, not decaying: cohorts hold a stable ~13% monthly repeat-purchase floor after month 3, so the business converts and keeps a steady minority rather than bleeding cohorts to zero — retention investment protects an annuity, not a leaking bucket.
 - 677 zero-net buyers (bought then fully refunded) are a distinct, addressable population — demand that converted and then reversed, a returns/satisfaction problem separate from the non-purchaser activation problem.
+- Concentration confirms retention priorities target the right population: ~1,600 customers (top 20%) hold ~70% of portfolio value. The Gini is now a monitorable KPI for dependence, distinct from — and not a substitute for — churn risk measurement.
 
 ## 🔮 Future Modeling Opportunities
 - Predictive CLV and churn probability per RFM segment (Phase 9) — the segments are natural model features/strata.
@@ -64,8 +70,8 @@
 ---
 
 ## 📦 Repository Evolution
-- **Sections completed:** Phase 5 A–G + Phase 6.1 RFM + 6.2 Cohort + 6.3 Historical CLV = 10 analytics modules live.
-- **Analytics layer status:** `sql/analytics/01`–`10` implemented; `11`–`13` planned (Pareto, Behavioral, Portfolio Synthesis).
-- **Repository note:** `09_cohort_analytics.sql` is the canonical cohort module (reconciled from the originally-planned `09_cohort_retention.sql`).
-- **Validation status:** 60/60 passing across the whole analytics layer, re-runnable via `python/validation/run_analytics_validation.py`.
-- **Next planned section:** 6.4 — Pareto & Customer Concentration (top 1/5/10/20/50%, Lorenz, Gini; consumes 6.3's Historical CLV vector; validates against certified Net Revenue).
+- **Sections completed:** Phase 5 A–G + Phase 6.1 RFM + 6.2 Cohort + 6.3 Historical CLV + 6.4 Pareto & Concentration = 11 analytics modules live.
+- **Analytics layer status:** `sql/analytics/01`–`11` implemented; `12`–`13` planned (Behavioral Analytics, Portfolio Synthesis).
+- **Repository note:** `09_cohort_analytics.sql` is the canonical cohort module (reconciled from the originally-planned `09_cohort_retention.sql`). `sql/analytics/README.md` index refreshed to current state in 6.4.
+- **Validation status:** 65/65 passing across the whole analytics layer, re-runnable via `python/validation/run_analytics_validation.py`.
+- **Next planned section:** 6.5 — Customer Behavioral Analytics (observed descriptive features only; must not recreate or infer generation personas per ED-009).
