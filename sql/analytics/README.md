@@ -22,7 +22,8 @@ The continuation doc originally specified a single `sql/analytics.sql`. This lay
 | `10_customer_lifetime_value.sql` | 6.3 — Historical Customer Lifetime Value | What historical value has each customer generated? | CFO | 5 |
 | `11_pareto_concentration.sql` | 6.4 — Pareto & Customer Concentration | How concentrated is portfolio value across customers? | CFO / Board | 5 |
 | `12_behavioral_analytics.sql` | 6.5 — Customer Behavioral Analytics | Which behaviors are associated with higher value, controlling for frequency? | Merchandising / Retention | 10 |
-| | | | **Total** | **75** |
+| `13_customer_portfolio_synthesis.sql` | 6.6 — Customer Portfolio Synthesis | How should executives interpret the complete customer portfolio? | CEO / CFO | 4 |
+| | | | **Total** | **79** |
 
 ## Running the analytics
 
@@ -30,7 +31,7 @@ The section files are read-only analytical SQL against `data/database/solstice_a
 
 ```bash
 python python/validation/run_analytics_validation.py
-# → 75/75 validations passed
+# → 79/79 validations passed
 ```
 
 ## Governing rules (see `docs/phase5_build_log.md`)

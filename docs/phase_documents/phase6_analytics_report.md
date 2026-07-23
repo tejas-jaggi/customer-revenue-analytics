@@ -366,3 +366,98 @@ Population reconciles exactly (7,034 + 677 + 289 = 8,000); behavioral bounds hol
 
 ### Phase Gate — Section 6.5
 **APPROVED for production use.** 10/10 validations pass, spanning population reconciliation, certified value anchors, behavioral feature completeness, null handling, behavioral bounds, and frequency-control integrity. The section explains rather than re-measures value, consumes the certified 6.1 and 6.3 outputs without recomputing them, maintains one canonical value taxonomy, reports its negative findings as first-class results, and frames its conclusion as an experimentation opportunity rather than a causal claim. Its behavioral markers are direct inputs to the Portfolio Synthesis (6.6).
+
+---
+
+## Section 6.6 — Customer Portfolio Synthesis *(Phase 6 capstone)*
+
+**Status: ✅ approved for production. 4/4 validations pass; the Unified Customer Portfolio View covers all 8,000 customers, reconciles to the certified $1,782,971.91, and carries every certified classification through with zero drift.**
+
+This section produces almost no new measurement, by design. Its purpose is **integration, not expansion**: assembling every certified finding from Phase 5 and Sections 6.1–6.5 into one coherent interpretation of the customer portfolio. Only two artifacts are built, because only two could not be obtained from work already certified — the Unified Customer Portfolio View, and a quantification of how far independent analytical methods agree with one another.
+
+### The Unified Customer Portfolio View
+
+One row per customer across the complete portfolio of 8,000, carrying RFM segment (6.1), Historical CLV and Value Class (6.3), behavioral features (6.5), and concentration position (6.4) together for the first time:
+
+| Population | Customers |
+|---|---|
+| Complete portfolio | 8,000 |
+| RFM-scored (purchasers) | 7,711 |
+| Behavioral population | 7,034 |
+| Excluded — non-purchasers (no RFM segment) | 289 |
+| Excluded — zero-net buyers (no behavioral features) | 677 |
+
+Behavioral attributes are legitimately NULL for the 966 customers outside the behavioral population, and RFM segment is NULL for the 289 who never purchased — the same exclusions documented in Sections 6.3 and 6.5, carried forward transparently rather than silently filled.
+
+**Classification fidelity: zero drift.** Every customer's RFM segment and Historical Value Class on the integrated view matches its certified source view exactly. This is the check that matters most for a synthesis layer — the characteristic failure of a capstone is quietly reclassifying customers so the integration disagrees with the sections it claims to summarize.
+
+### Convergence: do independent methods find the same customers?
+
+The platform has repeatedly observed that its findings "converge." That claim had never been tested at the customer level. Three high-value definitions, each built by a genuinely different construction, were compared:
+
+| Method | Construction | Customers |
+|---|---|---|
+| A · RFM Champions | recency/frequency/monetary scoring (6.1) | 1,178 |
+| B · Elite Value Class | absolute CLV banding ≥ $750 (6.3) | 538 |
+| C · Top CLV decile | concentration ranking (6.4) | 703 |
+
+| Overlap | Customers | Reading |
+|---|---|---|
+| A ∩ B | 481 | 89.4% of Elite customers are also Champions |
+| A ∩ C | 601 | 85.5% of the top decile are also Champions |
+| B ∩ C | 538 | **100%** of Elite customers sit in the top decile |
+| A ∩ B ∩ C | 481 | all three methods agree on 481 customers |
+
+Three techniques that share no construction — one scores behaviour into quintiles and bands, one applies an absolute dollar threshold, one ranks by position in a distribution — land on substantially the same people. **This increases confidence that these methods are identifying genuine characteristics of the customer portfolio rather than artifacts of any individual analytical technique.** It is not proof of correctness, and it should not be read as such; it is convergent evidence, which is a different and more modest thing.
+
+**Where the methods legitimately diverge** — briefly, because the divergence is explainable rather than troubling:
+
+| Population | Customers | Median CLV | Median Cadence |
+|---|---|---|---|
+| Elite but not Champion | 57 | $960.08 | 54 days |
+| Champion but not Elite | 697 | $464.25 | 76 days |
+
+These are not contradictions. **Champion is a broader, engagement-based designation** — 697 customers are highly engaged and recent but have not yet accumulated $750 of lifetime value, many simply because they have not been customers long enough. **Elite is a stricter accumulated-value threshold**, so the 57 Elite non-Champions are high-value customers whose recency or frequency scores fall just below the Champion cut. The two measure related but distinct things: current engagement versus accumulated value. A customer can reasonably be one without the other.
+
+**An investigated negative finding:** during design review, a "protect versus lapsed" framework was considered — identifying high-value customers whose engagement has slipped. Investigation showed **only two top-decile customers sit in genuinely lapsing segments, holding roughly $1,453 combined.** The portfolio contains no material population of high-value lapsing customers, so the framework was deliberately not built. Reporting this is more useful than constructing machinery for a problem this portfolio does not have.
+
+### Executive framework: Protect / Grow / Convert
+
+Grouping the **existing** certified RFM segments — no new taxonomy is introduced:
+
+| Framework | Segments | Customers | % of Portfolio | Historical CLV | % of Value | Median Categories | Median Cadence |
+|---|---|---|---|---|---|---|---|
+| **Protect** | Champions, Loyal | 2,154 | 26.9% | $1,358,847 | **76.2%** | 3 | 70 days |
+| **Grow** | Potential Loyalists, Promising | 1,780 | 22.3% | $178,194 | 10.0% | 1 | 119 days |
+| **Convert** | At Risk, Lost | 3,071 | 38.4% | $196,522 | 11.0% | 1 | 113 days |
+| Other | New/Recent, Needs Attention, Hibernating | 706 | 8.8% | $49,409 | 2.8% | 1 | 83 days |
+| Not activated | *(no RFM segment)* | 289 | 3.6% | $0 | 0.0% | — | — |
+
+The framework makes the portfolio's shape immediately legible:
+
+- **Protect (27% of customers, 76% of value).** The franchise. These customers shop across three categories and return roughly every ten weeks. Everything the platform has established points to protecting this group as the highest-leverage activity available.
+- **Grow (22%, 10% of value).** Customers past the hardest hurdle — they have purchased more than once — but not yet loyal. Single-category, four-month cadence. This is where the behavioral evidence from 6.5 is most directly applicable.
+- **Convert (38%, 11% of value).** The one-time majority. Large in count, small in value, and valuable primarily as a conversion opportunity rather than as current revenue.
+
+### Platform-Level Conclusions
+
+These are the enduring conclusions of the analytical platform, established across Phase 5 and Sections 6.1–6.5 and integrated here:
+
+1. **Customer value is primarily frequency-driven, not basket-driven.** Repeat customers place roughly 7.5 orders to a one-time buyer's 1, at almost identical order values. Section 6.5 reinforced this from the opposite direction: basket value fails to increase monotonically with customer value, peaking in the Moderate class rather than the Elite.
+
+2. **Customer value is meaningfully concentrated.** The top 20% of the portfolio holds 70.3% of value; the Protect group — 27% of customers — holds 76.2%. Concentration of this degree is a structural characteristic to monitor rather than a signal of distress, and it is distinct from churn risk.
+
+3. **Category breadth remains associated with customer value after controlling for purchase frequency.** Among customers with identical order counts, value rises 52–53% from narrow to broad category exposure. This is the platform's strongest evidence-backed candidate for a merchandising experiment — an association, not a demonstrated cause.
+
+4. **Mature cohorts stabilize into a durable repeat-purchase core.** Monthly purchase retention settles at roughly 13% from month three onward rather than decaying toward zero, so the business converts and holds a steady minority rather than continuously losing its cohorts.
+
+5. **Multiple independent analytical methods converge on the same underlying business characteristics.** RFM scoring, absolute value banding, concentration ranking, and frequency-controlled behavioral analysis were constructed differently and agree substantially — which increases confidence that these are genuine properties of the customer portfolio rather than artifacts of technique.
+
+### What remains outside the current evidence
+
+- **Predictive customer value and churn probability** — requires explicit survival modeling; deferred to the predictive modeling phase.
+- **The cause of the holiday growth plateau** — requires promotion and inventory data outside the warehouse.
+- **Causal behavioral claims** — the breadth finding establishes association under frequency control; only a controlled experiment can establish cause.
+
+### Phase Gate — Section 6.6
+**APPROVED for production use.** 4/4 validations pass: portfolio completeness (8,000 rows, one per customer), certified Net Revenue reconciliation, classification fidelity (zero drift from certified sources), and convergence integrity. The section integrated rather than expanded — introducing no new taxonomy, recomputing no certified metric, building only the Unified Customer Portfolio View and the convergence evidence that could not be obtained elsewhere, and documenting one investigated framework as a negative finding rather than building unnecessary complexity. **Phase 6 is complete.**

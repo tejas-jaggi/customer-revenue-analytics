@@ -266,3 +266,73 @@ Behavioral profiles are attached to RFM segments discovered in 6.1. No generatio
 Customer-grain feature aggregation over existing facts and certified views. Frequency control, dispersion reporting, and the low-base guardrail are documented analytical methods, not reusable engineering patterns — consistent with the 6.1–6.4 dispositions.
 
 ---
+
+## Section 6.6 — Customer Portfolio Synthesis  [Phase 6 capstone]
+
+**Status: complete, executed, validated. Phase Gate: APPROVED. Phase 6 COMPLETE.**
+
+### Deliverable
+`sql/analytics/13_customer_portfolio_synthesis.sql` — 13.1 (Unified Customer Portfolio View), 13.2 (classification fidelity), 13.3 (convergence quantification + disagreement populations), 13.4 (portfolio summary by executive framework). Creates temp view `v_customer_portfolio`; consumes `v_rfm_segments` (6.1), `v_historical_clv` (6.3), `v_behavioral_features` (6.5).
+
+### Analytical Necessity (Operating Procedure requirement)
+Synthesis produces no new measurement by definition, so the module was justified against a stricter test: **what here cannot be obtained from previously certified sections?** Exactly two things. **(1) The Unified Customer Portfolio View** — no prior view carries every certified classification on one customer row; `v_rfm_segments` lacks behavior, `v_historical_clv` lacks segments, `v_behavioral_features` excludes 966 customers. **(2) Convergence quantification** — whether independently constructed methods identify the *same customers* is a question no prior section asks, and it requires SQL. Everything else is narrative in the analytics report. **Duplication removed:** no certified metric is recomputed and no published table reproduced, avoiding a second home for numbers that already have one.
+
+### Approved design decisions implemented
+1. **Thin SQL module** — only the two non-obtainable artifacts; narrative lives in the report.
+2. **Unified Customer Portfolio View** — 8,000 customers, one row each; RFM segment, Historical Value Class, Historical CLV, behavioral features, concentration position. NULLs documented exactly as in 6.5.
+3. **Convergence quantification** retained, with brief disagreement-population summary.
+4. **Executive framework** groups the existing RFM taxonomy (Protect: Champions/Loyal · Grow: Potential Loyalists/Promising · Convert: At Risk/Lost) — no new segmentation.
+5. **Platform-Level Conclusions** summarize enduring findings across Phase 5 and 6.1–6.5 without new analysis.
+6. **Convergence interpretation** avoids proof language — framed as increasing confidence that methods identify genuine portfolio characteristics rather than technique artifacts.
+7. **Protect-vs-Lapsed NOT implemented** — documented as an investigated negative finding (only 2 material customers, ~$1,453).
+8. **Intentionally small validation framework** — synthesis-specific risks only.
+
+### Execution result (4 validations, against frozen v1.0.0)
+
+| Validation | Objective | Type | Result |
+|---|---|---|---|
+| 13.1 portfolio view completeness (8,000 rows, one per customer) | completeness | A | ✅ PASS |
+| 13.1b certified Net Revenue reconciliation ($1,782,971.91) | value integrity | A | ✅ PASS |
+| 13.2 classification fidelity — zero drift vs certified source views | integration integrity | B | ✅ PASS |
+| 13.3 convergence integrity — intersections bounded by their sets | set arithmetic | B | ✅ PASS |
+
+**4/4 pass. Whole analytics layer now 79/79.**
+
+Validations deliberately test only what synthesis itself can get wrong. Re-validating certified section outputs (e.g. that Champions hold 56.1%) was explicitly avoided — that would re-run 6.1's validation in a new file, adding noise rather than rigor.
+
+### Key findings
+1. **Convergence quantified for the first time** — 89.4% of Elite customers are Champions; 85.5% of the top decile are Champions; **100% of Elite sit in the top decile**; 481 customers satisfy all three independently-constructed definitions.
+2. **Divergence is explainable, not contradictory** — 697 "Champion not Elite" (engaged but not yet accumulated $750) and 57 "Elite not Champion" (high accumulated value, recency/frequency just below the Champion cut). Champion measures current engagement; Elite measures accumulated value.
+3. **Executive framework distribution** — Protect 2,154 customers (26.9%) hold **76.2%** of portfolio value at 3 categories / 70-day cadence; Grow 1,780 (22.3%) hold 10.0%; Convert 3,071 (38.4%) hold 11.0%.
+4. **Zero classification drift** — integration preserved every certified classification exactly.
+
+### Regression Anchors Used
+**Type A:** certified customer base (8,000) · certified Net Revenue ($1,782,971.91).
+**Type B:** classification fidelity against `v_rfm_segments` and `v_behavioral_features` (zero drift) · convergence set-arithmetic integrity (every intersection ≤ each contributing set; triple intersection ≤ each pairwise intersection).
+
+### ED-009 compliance
+The portfolio view carries segments discovered in 6.1 and behaviors observed in 6.5. No generation persona is named, inferred, or reconstructed anywhere in the synthesis.
+
+### No new Engineering Decision
+Joining certified views at customer grain. The portfolio view remains a **view**, not a persisted table, consistent with every prior section and with the frozen-warehouse principle — persisting it would have warranted an Engineering Decision, and it was deliberately not done.
+
+---
+
+## Phase 6 — COMPLETE
+
+All six sections implemented, executed, validated, and individually gate-approved.
+
+| Section | Module | Validations |
+|---|---|---|
+| 6.1 Adaptive RFM Segmentation | `08_rfm_segmentation.sql` | 4 |
+| 6.2 Cohort Analytics | `09_cohort_analytics.sql` | 6 |
+| 6.3 Historical Customer Lifetime Value | `10_customer_lifetime_value.sql` | 5 |
+| 6.4 Pareto & Customer Concentration | `11_pareto_concentration.sql` | 5 |
+| 6.5 Customer Behavioral Analytics | `12_behavioral_analytics.sql` | 10 |
+| 6.6 Customer Portfolio Synthesis | `13_customer_portfolio_synthesis.sql` | 4 |
+| **Phase 6 total** | **6 modules** | **34** |
+| **Analytics layer total (Phases 5+6)** | **13 modules** | **79** |
+
+No new Engineering Decision was created in any Phase 6 section. The warehouse remained frozen throughout; every section was read-only. All certified regression anchors are preserved.
+
+---

@@ -22,6 +22,10 @@
 **Insight:** The platform's first *explanatory* section. **Category breadth remains strongly associated with customer value after controlling for purchase frequency** — among customers with the same order count, value rises 52–53% from narrow to broad category exposure (3 orders: $122→$186; 4 orders: $204→$313). **Channel breadth largely FAILS the frequency control** (flat at 4 orders: $237/$223/$240), showing its strong raw separation was substantially a frequency artifact — the methodology catching an error that would otherwise have been published. Purchase cadence shows an association (fast <60d repurchasers hold ~45% higher median value at fixed frequency). Champion behavioral signature: 4 categories, 3 channels, ~60-day cadence.
 **Negative findings (documented, not discarded):** basket value peaks at *Moderate* not Elite (corroborating that value is not basket-driven), return rate peaks at *High* (consistent with Phase 5 G), discount share patternless.
 
+### Section 6.6 — Customer Portfolio Synthesis  [capstone]
+**Insight:** Integration, not expansion. The **Unified Customer Portfolio View** carries every certified classification on one row across all 8,000 customers with **zero classification drift** from source views. **Convergence quantified for the first time:** 89.4% of Elite customers are also RFM Champions, 85.5% of the top CLV decile are Champions, and 100% of Elite sit in the top decile — three differently-constructed methods identifying substantially the same people, which increases confidence they are detecting genuine portfolio characteristics rather than technique artifacts. Divergence is explainable: Champion measures current engagement (697 engaged but not yet $750 accumulated), Elite measures accumulated value (57 high-value with slightly lower recency/frequency). Executive framework: **Protect (27% of customers) holds 76.2% of value**; Grow 10.0%; Convert 11.0%.
+**Investigated negative finding:** a Protect-vs-Lapsed framework was deliberately NOT built — only 2 top-decile customers sit in lapsing segments (~$1,453), so the portfolio has no material high-value lapsing population.
+
 ---
 
 ## ✅ Resolved Findings
@@ -32,6 +36,8 @@
 | Historical CLV distribution + CLV by segment | 6.3 | Three-tier distribution + descriptive value classes; CLV × RFM bridge (Champions $849 avg / 56.1% of portfolio); dual-source reconciled to certified Net Revenue |
 | Formal concentration (top 1/5/10/20/50%, Lorenz, Gini) | 6.4 | Gini 0.6698 (complete portfolio) / 0.6574 (purchasers); top 20% = 70.3%; Phase 5 F.3 anchor reproduced exactly at 50.1% |
 | Behavioral profile of RFM segments; what explains value concentration | 6.5 | Category breadth survives frequency control (+52–53%); channel breadth does not; cadence secondary. Champion signature: 4 categories / 3 channels / 60-day cadence |
+| Do independent methods identify the same customers? | 6.6 | Yes — 89.4% Elite∩Champions, 85.5% top-decile∩Champions, 100% Elite⊂top-decile. Convergence increases confidence in genuine portfolio characteristics |
+| Unified portfolio interpretation for executives | 6.6 | Protect/Grow/Convert framework over certified RFM segments; Protect = 27% of customers, 76.2% of value |
 
 ## ❓ Open Findings
 *None remaining. All analytical threads raised in Sections 6.1–6.4 have been resolved by Section 6.5. Section 6.6 (Portfolio Synthesis) integrates the completed findings rather than opening new analytical questions.*
@@ -56,6 +62,8 @@
 - **6.5 ↔ 6.1/6.3:** consumes both certified views (RFM segments, Historical CLV + Value Classes) without recomputation — confirming 6.3's conditional note that the Historical Value Classes would earn their place as a comparison axis.
 - **6.5 ↔ Phase 5 F/G:** the frequency-controlled breadth result explains the concentration that Phase 5 F and 6.4 measured; the basket and return negative findings corroborate Phase 5 F (value not basket-driven) and Phase 5 G (loyalty not a return risk).
 - **6.5 → 6.6/Phase 7:** category breadth is the platform's strongest candidate merchandising experiment.
+- **6.6 ← ALL:** the capstone consumes 6.1 (segments), 6.3 (value + classes), 6.4 (concentration position), 6.5 (behavioral features) and Phase 5 (narrative) without recomputing any of them — integration verified by zero classification drift.
+- **6.6 → Phase 7 / Phase 9:** the Unified Customer Portfolio View is the natural consumable for recommendations and a natural feature table for future churn modeling.
 
 ## ⚠️ Contradictions
 - None to date. (6.1 agrees with Phase 5 F; 6.2 agrees with both.)
@@ -68,6 +76,7 @@
 - 677 zero-net buyers (bought then fully refunded) are a distinct, addressable population — demand that converted and then reversed, a returns/satisfaction problem separate from the non-purchaser activation problem.
 - Concentration confirms retention priorities target the right population: ~1,600 customers (top 20%) hold ~70% of portfolio value. The Gini is now a monitorable KPI for dependence, distinct from — and not a substitute for — churn risk measurement.
 - The platform now has an evidence-backed behavioral lever: cross-category exposure remains associated with value after controlling for frequency, making it the strongest candidate for a controlled merchandising experiment (association, not causation — an experiment, not a reallocation decision).
+- Executives now have one portfolio interpretation rather than six analyses: Protect (27% of customers / 76.2% of value) is the franchise; Grow (22%) is the pipeline where the breadth evidence applies most directly; Convert (38%) is large in count and small in value, valuable as conversion opportunity rather than current revenue.
 
 ## 🔮 Future Modeling Opportunities
 - Predictive CLV and churn probability per RFM segment (Phase 9) — the segments are natural model features/strata.
@@ -77,8 +86,9 @@
 ---
 
 ## 📦 Repository Evolution
-- **Sections completed:** Phase 5 A–G + Phase 6.1 RFM + 6.2 Cohort + 6.3 Historical CLV + 6.4 Pareto & Concentration + 6.5 Behavioral Analytics = 12 analytics modules live.
-- **Analytics layer status:** `sql/analytics/01`–`12` implemented; `13` planned (Customer Portfolio Synthesis).
-- **Repository note:** `09_cohort_analytics.sql` is the canonical cohort module. `sql/analytics/README.md` index current through module 12.
-- **Validation status:** 75/75 passing across the whole analytics layer, re-runnable via `python/validation/run_analytics_validation.py`.
-- **Next planned section:** 6.6 — Customer Portfolio Synthesis (integrate RFM, cohort, CLV, concentration, and behavioral findings into a unified customer-portfolio view; evolves into the Phase 6 Executive Synthesis).
+- **Sections completed:** Phase 5 A–G (7 modules) + Phase 6.1–6.6 (6 modules) = **13 analytics modules live. PHASE 6 COMPLETE.**
+- **Analytics layer status:** `sql/analytics/01`–`13` fully implemented.
+- **Repository note:** `09_cohort_analytics.sql` is the canonical cohort module. `sql/analytics/README.md` index current through module 13.
+- **Validation status:** **79/79** passing across the whole analytics layer, re-runnable via `python/validation/run_analytics_validation.py`. Phase 6 contributed 34 validations.
+- **Engineering Decisions:** none created in any Phase 6 section; warehouse remained frozen and read-only throughout.
+- **Next:** Phase 6 closeout deliverables (Executive Synthesis / completion documentation) and Phase 7 — Business Insights & Executive Recommendations.
