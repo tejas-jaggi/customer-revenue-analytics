@@ -37,8 +37,8 @@ The project follows a documentation-first, phase-gated engineering methodology w
 | Phase 3 – Deterministic Synthetic Data Generation | ✅ Complete |
 | Phase 4 – Warehouse-wide Validation & Certification | ✅ Complete |
 | Phase 5 – SQL Analytics Layer (Sections A–G) + Synthesis | ✅ Complete & Closed |
-| Phase 6 – Advanced Customer Analytics | ⬜ Next |
-| Phase 7 – Business Insights & Executive Recommendations | ⬜ Planned |
+| Phase 6 – Advanced Customer Analytics | ✅ Complete & Closed |
+| Phase 7 – Business Insights & Executive Recommendations | ✅ Complete |
 | Phase 8 – Repository & Portfolio Finalization | ⬜ Planned |
 | Phase 9 – Churn Prediction (Stretch Goal) | ⬜ Planned |
 
@@ -185,4 +185,6 @@ The two projects intentionally complement one another while demonstrating differ
 
 # Current Focus
 
-Phase 5 (SQL Analytics Layer) is complete, validated (45/45), and formally closed — the Executive Synthesis and Completion Document are delivered, and the Phase 6 continuation and opening prompt are prepared. The project now proceeds to **Phase 6 — Advanced Customer Analytics**.
+Phases 5, 6 and 7 are complete and closed. The certified analytics layer comprises **13 modules with 79/79 validations passing**; Phase 6 concluded with the Customer Portfolio Synthesis and a formal completion document; Phase 7 delivered the Executive Decision Layer — seven evidence-traceable recommendations built exclusively from certified findings, with no new SQL module.
+
+The remaining planned work is **Phase 8 — Repository & Portfolio Finalization** (README placeholders, ER diagram export, release tagging) and the optional **Phase 9 — Churn Prediction** stretch goal, which is where predictive CLV and churn probability are deferred to.
