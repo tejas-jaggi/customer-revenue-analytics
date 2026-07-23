@@ -65,7 +65,7 @@ Standard RFM composing existing structure; the adaptive-frequency choice is a do
 **Status: complete, executed, validated. Phase Gate: APPROVED.**
 
 ### Deliverable
-`sql/analytics/09_cohort_retention.sql` — 6.2.1 (cohort base & maturity), 6.2.2 (primary: monthly purchase retention), 6.2.3 (secondary: 90-day engagement), 6.2.4 (revenue/orders/AOV), 6.2.5 (customer value), 6.2.6 (RFM composition by cohort). Creates temp view `v_cohort_base` (+ `v_cohort_retention`); consumes `v_rfm_segments` from 6.1.
+`sql/analytics/09_cohort_analytics.sql` — 6.2.1 (cohort base & maturity), 6.2.2 (primary: monthly purchase retention), 6.2.3 (secondary: 90-day engagement), 6.2.4 (revenue/orders/AOV), 6.2.5 (customer value), 6.2.6 (RFM composition by cohort). Creates temp view `v_cohort_base` (+ `v_cohort_retention`); consumes `v_rfm_segments` from 6.1.
 
 ### Approved design decisions implemented
 1. **Signup cohorts**, full 8,000 base including 289 non-purchasers (age-0 = activation). Denominators documented per query.
@@ -109,5 +109,52 @@ Monthly purchase retention stabilizes at a **durable ~13% floor from month 3** (
 
 ### No new Engineering Decision
 Cohort analysis composes existing structure (snapshot + order aggregates + certified anchors + the 6.1 views). The maturity classification and dual-retention methodology are documented analytical methods, not reusable engineering patterns.
+
+---
+
+## Section 6.3 — Historical Customer Lifetime Value
+
+**Status: complete, executed, validated. Phase Gate: APPROVED.**
+
+### Deliverable
+`sql/analytics/10_customer_lifetime_value.sql` — 6.3.1 (per-customer Historical CLV + dual-source reconciliation), 6.3.2 (three-tier distribution), 6.3.3 (positive-CLV percentiles + descriptive Historical Value Classes), 6.3.4 (CLV × RFM bridge). Creates temp view `v_historical_clv`; consumes `v_rfm_segments` from 6.1.
+
+### Approved design decisions implemented
+1. **Strictly historical** — no survival/predictive/projected components. Predictive CLV explicitly deferred to Phase 9.
+2. **All 8,000 customers**, three-tier reporting (non-purchaser / zero-net buyer / positive), each tier's business meaning documented.
+3. **Net Revenue basis**, dual-source validated (snapshot cumulative vs base-fact), both = $1,782,971.91.
+4. **Distribution focus only** — no Pareto/Gini/Lorenz (reserved for 6.4).
+5. **CLV × RFM as a first-class view** — count, avg, median, total, portfolio share.
+6. **No CLV × cohort** — maturity confound from 6.2 referenced and the exclusion justified in the report.
+7. **Repository authoritative** — reconciled `09_cohort_retention.sql` → `09_cohort_analytics.sql` (SQL renamed, build-log references updated) to match the canonical repository name.
+
+### Additional requirements implemented
+- **Descriptive Historical Value Classes** (Low <$100 / Moderate $100-300 / High $300-750 / Elite $750+) grounded empirically on the positive-CLV distribution (breaks ≈ P50/P75/~P92). Documented as descriptive-only, no predictive meaning; their potential use in 6.5 Behavioral Analytics and 6.6 Portfolio Synthesis is noted as conditional on whether value class explains behavioral differences.
+- **Historical CLV vs Average Customer Value** distinguished explicitly throughout (per-customer quantity vs group aggregate); median leads over mean given the ~22× P99/P50 skew.
+
+### Execution result (5 validations, against frozen v1.0.0)
+
+| Validation | Type | Result |
+|---|---|---|
+| 6.3.1 base-fact Historical CLV total = $1,782,971.91 | A | ✅ PASS |
+| 6.3.1b dual-source: snapshot cumulative = base-fact | B | ✅ PASS |
+| 6.3.2 three tiers partition 8,000 | B | ✅ PASS |
+| 6.3.3 value classes cover all positive-CLV customers | B | ✅ PASS |
+| 6.3.4 CLV across RFM segments = $1,782,971.91 | A | ✅ PASS |
+
+**5/5 pass. Whole analytics layer now 60/60.**
+
+### Key finding
+Three economically distinct populations, not two: 289 non-purchasers, **677 zero-net buyers** (bought then fully refunded — a non-obvious population invisible in a naive split), and 7,034 positive-CLV. Among positive-CLV, heavy right skew (median $102 vs mean $253); the descriptive Elite class (7.6% of value-generating customers) holds 41.3% of retained value. CLV × RFM translates scores to dollars: Champions avg $849 / median $642 / $1.0M total (56.1% of portfolio) — the bridge into 6.6.
+
+### Regression Anchors Used
+**Type A:** Net Revenue ($1,782,971.91) — base-fact total and CLV×RFM segment total. Customer Base (8,000).
+**Type B:** dual-source reconciliation (snapshot cumulative net revenue = base-fact orders−returns, independent derivations) · three-tier partition (=8,000) · value-class coverage (=positive-CLV count).
+
+### ED-009 compliance
+CLV × RFM uses the segments discovered in 6.1; no generation persona named or inferred. Historical Value Classes are empirical descriptive bands, not persona proxies.
+
+### No new Engineering Decision
+Customer-grain aggregation composing existing structure + certified anchors + the 6.1 views. Three-tier reporting and descriptive value classes are documented analytical/interpretive methods, not reusable engineering patterns.
 
 ---

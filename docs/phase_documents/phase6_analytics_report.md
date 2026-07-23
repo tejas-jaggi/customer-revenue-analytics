@@ -145,3 +145,67 @@ All measures reconcile to certified anchors; the two retention curves are correc
 
 ### Phase Gate — Section 6.2
 **APPROVED for production use.** 6/6 validations pass (Type A reconciliations to the certified base, revenue, orders, and Net Revenue; Type B retention-base and cohort-mapping recomputations). The section delivered the longitudinal view the platform lacked, kept the two retention definitions rigorously separate (the 90-day engagement cliff shows exactly why that mattered), and — most importantly for analytical integrity — refused to read the maturity-confounded value and composition gradients as quality trends, flagging them instead. Cohort labels and the maturity classification now feed the Portfolio Synthesis (6.6).
+
+---
+
+## Section 6.3 — Historical Customer Lifetime Value
+
+**Status: ✅ approved for production. 5/5 validations pass, including a dual-source reconciliation; Historical CLV reconciles to the certified $1,782,971.91 across all 8,000 customers.**
+
+**Terminology (used precisely throughout).** *Historical Customer Lifetime Value (Historical CLV)* is a **per-customer** quantity — the total observed Net Revenue one customer has generated over their lifetime to date. *Average Customer Value* is a **group aggregate** — the mean Historical CLV across a set of customers. They are different concepts and are not used interchangeably. And *historical* is literal: this section measures value that **has been** generated. It contains no prediction, no survival model, no projection — predictive CLV is deferred to the future predictive-modeling phase (Phase 9), where survival probability is actually modeled.
+
+### 6.3.1 — Measurement and dual-source validation
+
+Historical CLV(customer) = lifetime Order Net Revenue − lifetime returns, on the Net Revenue basis. The measure was computed two independent ways and both agree to the cent: the **base-fact computation** (orders − returns from `Fact_Orders`/`Fact_Returns`) and the **snapshot's cumulative net revenue** both total **$1,782,971.91**. Two independent derivations of the same quantity agreeing is stronger evidence than a single anchor match — the Type B dual-source check is the section's most rigorous validation. A useful structural property also holds: **no customer has negative Historical CLV** — returns never exceed purchases at the customer level.
+
+### 6.3.2 — Three-tier distribution
+
+The customer base does not split cleanly into "buyers and non-buyers." It has **three economically distinct populations**, and reporting them separately prevents the $0 mass from hiding inside an average:
+
+| Tier | Customers | % of base | Total Historical CLV | Business meaning |
+|---|---|---|---|---|
+| Non-purchaser | 289 | 3.6% | $0 | Acquired but never activated — no order ever placed |
+| Zero-net buyer | 677 | 8.5% | $0 | Purchased, then **fully refunded** — real transactions, zero retained value |
+| Positive Historical CLV | 7,034 | 87.9% | $1,782,971.91 | Retained economic value |
+
+The **zero-net buyers are the non-obvious population**: 677 customers (8.5% of the base) *did* transact but returned everything, netting to exactly zero. They are invisible in a naive purchaser/non-purchaser split, yet they are operationally distinct from non-purchasers — they represent demand that converted to a sale and then reversed, a different problem (fit, satisfaction, returns) than a signup that never activated. Surfacing them is the honest version of the distribution.
+
+### 6.3.3 — Value distribution and descriptive Historical Value Classes
+
+Among the 7,034 positive-CLV customers, the distribution is **heavily right-skewed**, so the **median ($101.69) leads and the mean ($253.48) is context only** — with a P90 of $637 and a max of $3,949, the mean is pulled well above the typical customer and would mislead if used as "the average customer's value."
+
+Four **descriptive** Historical Value Classes, empirically grounded on the distribution (breaks near P50/P75/~P92):
+
+| Class | Customers | % of positive | Avg Historical CLV | Share of positive CLV |
+|---|---|---|---|---|
+| Low (<$100) | 3,475 | 49.4% | $49.97 | 9.7% |
+| Moderate ($100–300) | 1,851 | 26.3% | $173.95 | 18.1% |
+| High ($300–750) | 1,170 | 16.6% | $470.40 | 30.9% |
+| Elite ($750+) | 538 | 7.6% | $1,369.84 | 41.3% |
+
+The shape is the by-now-familiar concentration seen from a new angle: **the Elite class is 7.6% of value-generating customers but holds 41.3% of retained value**, while the Low class is nearly half of them but under 10%. *These classes are descriptive summaries of observed history only — they carry no predictive meaning and imply nothing about a customer's future value.* They exist to give later sections (Behavioral Analytics, Portfolio Synthesis) a compact value vocabulary; whether they earn their place there depends on whether value class explains behavioral differences, which 6.5 will test. **Concentration statistics — top-N%, Lorenz, Gini — are deliberately excluded here and reserved for Section 6.4.**
+
+### 6.3.4 — Historical CLV × RFM segment (the principal bridge)
+
+This is the view that translates RFM *scores* into *dollars* — the connective tissue between 6.1, 6.3, and the eventual 6.6 synthesis:
+
+| RFM Segment | Customers | Avg Historical CLV | Median Historical CLV | Total Historical CLV | Portfolio CLV Share |
+|---|---|---|---|---|---|
+| Champions | 1,178 | $849.01 | $642.26 | $1,000,140 | 56.1% |
+| Loyal | 976 | $367.53 | $309.34 | $358,708 | 20.1% |
+| At Risk | 1,534 | $64.99 | $47.98 | $99,694 | 5.6% |
+| Lost | 1,537 | $63.00 | $45.90 | $96,828 | 5.4% |
+| Promising | 1,249 | $74.00 | $54.67 | $92,432 | 5.2% |
+| Potential Loyalists | 531 | $161.51 | $138.41 | $85,762 | 4.8% |
+| New / Recent | 693 | $65.02 | $48.66 | $45,057 | 2.5% |
+
+Publishing **both average and median customer value per segment** matters because of the skew: within Champions the average ($849) sits well above the median ($642), confirming that even the top segment has a long right tail of exceptional customers pulling the group average up. Reading the *median* Champion ($642) as the typical Champion, and the *total* ($1.0M, 56.1% of the portfolio) as the segment's strategic weight, gives an executive two correctly-distinguished numbers rather than one ambiguous "value." At Risk and Lost — the one-time majority — sit near $64 average, $46 median: the second-purchase opportunity in dollars.
+
+### Result Sanity Review
+Both CLV sources reconcile to the certified total; the three tiers partition all 8,000; value classes cover all positive-CLV customers; every segment's median is below its mean (confirming right skew throughout); Champions carry the highest average, median, and total. Nothing anomalous.
+
+### Cohort × CLV — intentionally excluded
+A Historical-CLV-by-cohort view is deliberately **not** produced here. Section 6.2 established that cumulative cohort measures rise monotonically with cohort age as a pure accumulation artifact (a 2023 cohort has had 35 months to accumulate value, a 2025 cohort barely any). Plotting Historical CLV by cohort would reproduce that maturity confound and invite it to be misread as a vintage-quality trend. The valid cross-vintage comparison is retention at equal age (6.2.2), not cumulative value — so this section holds to the portfolio and segment views, where the maturity confound does not apply.
+
+### Phase Gate — Section 6.3
+**APPROVED for production use.** 5/5 validations pass (Type A reconciliation to certified Net Revenue and the CLV×RFM total; Type B dual-source reconciliation, three-tier partition, and value-class coverage). The section measured historical value strictly as an outcome, kept *Historical CLV* and *Average Customer Value* rigorously distinct, surfaced the non-obvious zero-net-buyer population, and produced the CLV×RFM bridge that carries into the Portfolio Synthesis. The per-customer Historical CLV vector (`v_historical_clv`) is the direct input to Section 6.4's concentration analysis.
