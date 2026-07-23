@@ -209,3 +209,60 @@ No persona inference; concentration is computed purely from observed Historical 
 Window-function aggregation over an existing view composing certified anchors. The Gini computation is a standard formula implemented in SQL — a documented analytical method, not a reusable engineering pattern.
 
 ---
+
+## Section 6.5 — Customer Behavioral Analytics
+
+**Status: complete, executed, validated. Phase Gate: APPROVED.**
+
+### Deliverable
+`sql/analytics/12_behavioral_analytics.sql` — 12.1 (feature base + population reconciliation), 12.2 (raw profile by Historical Value Class with dispersion), 12.3 (frequency-controlled category breadth — centerpiece), 12.4 (frequency-controlled channel breadth + cadence), 12.5 (negative findings), 12.6 (behavioral profile by RFM segment). Creates temp view `v_behavioral_features`; consumes `v_historical_clv` (6.3) and `v_rfm_segments` (6.1).
+
+### Analytical Necessity (Operating Procedure requirement)
+6.1/6.3/6.4 MEASURE value (classify, quantify, distribute). 6.5 is the first section that EXPLAINS it. **New capability: frequency-controlled explanatory analysis** — isolating whether a behavior is associated with value independently of purchase frequency. **New decision enabled:** an actionable merchandising/lifecycle lever rather than another metric. **Duplication removed:** purchase frequency and repeat rate are already covered by 6.1/6.2/Phase 5 F and appear here only as a control variable, never as a finding.
+
+### Approved methodological decisions implemented
+1. **Frequency control is the governing methodology** — every behavioral dimension evaluated within fixed order-count strata; frequency reported only as a control.
+2. **Canonical value axis** — Historical Value Classes (Low/Moderate/High/Elite) from 6.3; no CLV quartiles or alternative taxonomy introduced.
+3. **Behavioral definition** — primary dimensions limited to repeatedly-chosen behaviors (category breadth, channel breadth, purchase cadence); returns and discount usage excluded as primary drivers (substantially shaped by business policy/post-purchase outcomes); basket value not treated as a behavioral dimension.
+4. **Negative findings documented** (12.5) rather than silently discarded — basket value, return behavior, discount sensitivity.
+5. **Non-causal interpretation language** throughout: behaviors "remain associated with customer value after controlling for purchase frequency"; recommendations framed as experimentation opportunities.
+6. **Dispersion reporting** — medians and IQR alongside means, chosen because behavioral distributions are skewed and small cells make means fragile.
+7. **Minimum cell size ~30**; smaller cells presented but flagged `LOW_BASE` and excluded from executive interpretation.
+8. **Certified positive-CLV population (7,034)**; exclusions explicitly documented (677 zero-net buyers + 289 non-purchasers = 8,000).
+9. **Expanded validation** — feature completeness, frequency-control integrity, null handling, and population reconciliation added alongside certified anchors.
+
+### Execution result (10 validations, against frozen v1.0.0)
+
+| Validation | Type | Result |
+|---|---|---|
+| 12.1 population = 7,034 & value = $1,782,971.91 | A | ✅ PASS |
+| 12.1b population reconciliation: analysis + exclusions = 8,000 | B | ✅ PASS |
+| 12.1c behavioral feature completeness (no NULL core features) | B | ✅ PASS |
+| 12.1d null handling (cadence NULL iff single-order) | B | ✅ PASS |
+| 12.1e behavioral bounds (category ≤5, channel ≤3, cadence ≥0) | B | ✅ PASS |
+| 12.2 value classes partition 7,034 | B | ✅ PASS |
+| 12.3 frequency-control integrity (strata cells partition population) | B | ✅ PASS |
+| 12.4 cadence view excludes single-order customers | B | ✅ PASS |
+| 12.5 negative-finding view covers full population | B | ✅ PASS |
+| 12.6 RFM-profiled customers reconcile to behavioral population | B | ✅ PASS |
+
+**10/10 pass. Whole analytics layer now 75/75.**
+
+### Key findings
+1. **Category breadth survives frequency control** — at 3 orders value rises 52% from 1→3 categories; at 4 orders, 53% from 2→4. Holds across all four strata, strongest at moderate frequencies and attenuating at 5–6 orders. The platform's first evidence-backed behavioral lever.
+2. **Channel breadth largely FAILS frequency control** — flat/non-monotonic at 4 orders ($237/$223/$240) despite a strong raw separation (1 channel Low vs 3 Elite). The raw signal was substantially a frequency artifact. **This is the methodology proving its worth**: without the control, channel breadth would have been reported as a value driver.
+3. **Purchase cadence shows an association** — fast (<60d) repurchasers hold materially higher median value at fixed frequency ($305 vs $210/$220 at 4 orders), though moderate and slow are not cleanly ordered.
+4. **All three negative findings confirmed non-monotonic** — basket value peaks at Moderate (not Elite), corroborating that value is not basket-driven; return rate peaks at High (consistent with Phase 5 G); discount share patternless.
+5. **Champion behavioral signature:** 4 categories, 3 channels, ~60-day cadence.
+
+### Regression Anchors Used
+**Type A:** Net Revenue ($1,782,971.91) · certified positive-CLV population (7,034) · certified customer base (8,000 via reconciliation).
+**Type B:** population reconciliation (7,034+677+289) · feature completeness · null handling (cadence↔single-order invariant) · behavioral bounds vs dimension cardinality (Dim_Product 5 categories, Dim_Sales_Channel 3) · value-class partition · frequency-strata partition · cadence population purity · RFM-profile reconciliation.
+
+### ED-009 compliance
+Behavioral profiles are attached to RFM segments discovered in 6.1. No generation persona is named, inferred, or reconstructed. The section deliberately creates **no new behavioral taxonomy** — one canonical segmentation (RFM) and one canonical value axis (Historical Value Classes) are maintained platform-wide.
+
+### No new Engineering Decision
+Customer-grain feature aggregation over existing facts and certified views. Frequency control, dispersion reporting, and the low-base guardrail are documented analytical methods, not reusable engineering patterns — consistent with the 6.1–6.4 dispositions.
+
+---

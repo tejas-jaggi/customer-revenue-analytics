@@ -273,3 +273,96 @@ The ladder is monotonically non-decreasing and bounded; the Lorenz curve termina
 
 ### Phase Gate — Section 6.4
 **APPROVED for production use.** 5/5 validations pass (Type A total-value and base reconciliation plus the Phase 5 F.3 cross-phase regression; Type B ladder monotonicity, Lorenz endpoint, and Gini bounds). The section introduced genuine new capability — portfolio-level inequality measurement — while consuming rather than recomputing Historical CLV, declared its analytical basis at every figure, preserved comparability with certified Phase 5 findings, and kept concentration rigorously distinct from churn risk. The Gini and top-N ladder are headline inputs to the Portfolio Synthesis (6.6).
+
+---
+
+## Section 6.5 — Customer Behavioral Analytics
+
+**Status: ✅ approved for production. 10/10 validations pass; behavioral population reconciles to the certified positive-CLV population (7,034) and to the 8,000 customer base with exclusions documented.**
+
+Every previous section *measures* customer value — RFM classifies it, Historical CLV quantifies it, Pareto describes its distribution. Section 6.5 is the first that attempts to **explain** it: which observable, repeatedly-chosen behaviors remain associated with higher historical value **after controlling for purchase frequency**. Its output is a candidate lever for experimentation rather than another number.
+
+### Methodology: why frequency control is the whole point
+
+Behavioral breadth is **mechanically coupled to order count** — a customer with one order touches ~1.17 product categories; a customer with seven touches ~3.42. So a raw comparison of behavior against value can be nothing more than purchase frequency wearing a different name, and frequency is already fully covered by RFM (6.1), cohort retention (6.2), and Phase 5 F. Reporting it again would add nothing.
+
+The governing method is therefore to **hold order count fixed** and ask whether a behavior still separates value inside a stratum. Purchase frequency appears throughout as a *control variable*, never as a behavioral finding. Cells below 30 customers are flagged `LOW_BASE` and excluded from interpretation. Medians and interquartile ranges are reported alongside means, since behavioral distributions are skewed and averages read in isolation would mislead.
+
+**Population (certified, from 6.3):** 7,034 positive Historical CLV customers. **Explicitly excluded:** 677 zero-net buyers (purchased then fully refunded — their behavior exists but their value is zero, which would distort behavioral averages) and 289 non-purchasers (no behavior to observe). 7,034 + 677 + 289 = 8,000.
+
+### 12.2 — Raw behavioral profile by Historical Value Class
+
+Using the canonical Historical Value Classes from Section 6.3 (no alternative taxonomy is introduced):
+
+| Value Class | Customers | Median Frequency *(control)* | Median Category Breadth (IQR) | Median Channel Breadth | Median Cadence (days) |
+|---|---|---|---|---|---|
+| Low (<$100) | 3,475 | 1 | 1 (1–1) | 1 | 98 |
+| Moderate ($100–300) | 1,851 | 2 | 2 (1–3) | 1 | 104 |
+| High ($300–750) | 1,170 | 7 | 3 (3–4) | 2 | 76 |
+| Elite ($750+) | 538 | 14 | 4 (3–5) | 3 | 52 |
+
+Every behavioral dimension appears to separate value cleanly. **But note the control column:** median frequency also rises 1 → 2 → 7 → 14 across the same classes. That is precisely the confound the next sections resolve — this raw view cannot distinguish behavior from frequency.
+
+### 12.3 — Frequency-controlled: category breadth *(the central result)*
+
+Among customers who placed **exactly the same number of orders**, median Historical CLV by category breadth (reliable cells only):
+
+| Orders = 3 | Orders = 4 | Orders = 5 | Orders = 6 |
+|---|---|---|---|
+| 1 cat → $122 | 2 cat → $204 | 2 cat → $284 | 2 cat → $277 |
+| 2 cat → $165 | 3 cat → $234 | 3 cat → $291 | 3 cat → $342 |
+| 3 cat → $186 | 4 cat → $313 | 4 cat → $322 | 4 cat → $336 |
+
+**Category breadth remains strongly associated with customer value after controlling for purchase frequency.** The association holds in all four strata: at three orders, value rises 52% from one to three categories; at four orders, 53% from two to four categories. Two customers who bought the identical number of times differ substantially in value depending on how broadly they shopped.
+
+An honest nuance: the association is **strongest at lower frequencies and attenuates as frequency rises** — at five and six orders the gradient flattens between three and four categories (and the six-order, four-category cell sits slightly below three categories). Breadth appears to carry the most information among moderate buyers; among frequent buyers, frequency itself dominates.
+
+### 12.4 — Frequency-controlled: channel breadth and purchase cadence
+
+**Channel breadth does *not* survive the control cleanly — a significant negative result.** At four orders the relationship is essentially flat and non-monotonic (1 channel → $237, 2 → $223, 3 → $240); only at six orders does a mild rise appear (2 → $320, 3 → $341). The strong raw separation seen in 12.2 (median 1 channel for Low, 3 for Elite) was therefore **largely a frequency artifact**: customers who order more often naturally encounter more channels. This is exactly the error the methodology was designed to catch, and it is reported rather than quietly dropped.
+
+**Purchase cadence does show an association.** At fixed frequency, fast-repurchasing customers are consistently the most valuable — at four orders, fast (<60 days) customers hold a median $305 versus $210 (moderate) and $220 (slow); at six orders, $393 versus $283 and $329. The pattern is *"fast stands apart"* rather than a clean gradient, since moderate and slow are not cleanly ordered between themselves. Speed of return, independent of how many times a customer returns, is associated with higher value.
+
+### 12.5 — Tested but non-explanatory variables (negative findings)
+
+Documented deliberately rather than discarded, because knowing what *fails* to explain value is part of the evidence that the primary dimensions were chosen on merit:
+
+| Value Class | Median Basket Value | Return Rate | Median Discount Share |
+|---|---|---|---|
+| Low | $46.62 | 11.1% | 0.0% |
+| Moderate | $104.05 | 15.4% | 2.9% |
+| High | $79.49 | 18.0% | 6.8% |
+| Elite | $101.35 | 12.7% | 5.5% |
+
+**All three fail to vary monotonically with value.** Basket value peaks in the *Moderate* class, not the Elite — independently corroborating the platform's core thesis that value is built by buying often and broadly rather than by larger baskets. Return rate peaks in the *High* class and falls for Elite, consistent with the Phase 5 G finding that loyalty is not a return risk. Discount share shows no coherent pattern.
+
+Beyond failing the test, returns and discount usage were also **not appropriate primary behavioral dimensions** in the first place: both are substantially shaped by business policy and post-purchase outcomes rather than being behaviors a customer freely and repeatedly chooses. Basket value is an outcome of purchasing, not a behavior in itself.
+
+### 12.6 — Behavioral profile by RFM segment (integration with 6.1)
+
+Behavioral profiles are attached to the **existing** RFM segmentation — no competing behavioral taxonomy is created:
+
+| Segment | Customers | Median Category Breadth | Median Channel Breadth | Median Cadence (days) |
+|---|---|---|---|---|
+| Champions | 1,178 | 4 | 3 | 60 |
+| Loyal | 976 | 3 | 2 | 84 |
+| Potential Loyalists | 523 | 2 | 2 | 119 |
+| At Risk | 1,334 | 1 | 1 | 113 |
+| Promising | 1,104 | 1 | 1 | 118 |
+| Lost | 1,324 | 1 | 1 | — |
+
+The behavioral signature of a Champion is legible: **four categories, three channels, returning roughly every two months.** At Risk, Lost, and Promising customers share a single-category, single-channel profile. *(These are observed behaviors attached to segments discovered from RFM scores. No generation persona is named, inferred, or reconstructed — ED-009 remains in force.)*
+
+### Executive interpretation
+
+The clearest evidence-backed opportunity is **category breadth**. It is the one behavior that remains strongly associated with customer value after controlling for how often customers buy, and the effect size at moderate frequencies is substantial. This makes cross-category exposure — merchandising, bundling, recommendation placement — the **strongest candidate for a future merchandising experiment**.
+
+That framing is deliberate. This analysis establishes *association*, not causation: customers inclined to shop broadly may differ in unobserved ways from those who do not, and nothing here demonstrates that moving a customer into a second category would raise their value. The appropriate next step is a controlled experiment, not a reallocation decision made on this evidence alone.
+
+**Purchase cadence** is a secondary candidate, with fast repurchasers standing apart at fixed frequency. **Channel breadth should not be pursued** on the strength of the raw numbers — under frequency control it largely dissolves.
+
+### Result Sanity Review
+Population reconciles exactly (7,034 + 677 + 289 = 8,000); behavioral bounds hold (category breadth 1–5 against 5 categories; channel breadth 1–3 against 3 channels); cadence is NULL for exactly the single-order customers and non-negative elsewhere; frequency strata partition their population with no double-counting; all value totals tie to the certified $1,782,971.91. Nothing anomalous.
+
+### Phase Gate — Section 6.5
+**APPROVED for production use.** 10/10 validations pass, spanning population reconciliation, certified value anchors, behavioral feature completeness, null handling, behavioral bounds, and frequency-control integrity. The section explains rather than re-measures value, consumes the certified 6.1 and 6.3 outputs without recomputing them, maintains one canonical value taxonomy, reports its negative findings as first-class results, and frames its conclusion as an experimentation opportunity rather than a causal claim. Its behavioral markers are direct inputs to the Portfolio Synthesis (6.6).
