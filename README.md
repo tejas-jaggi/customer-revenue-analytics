@@ -1000,18 +1000,9 @@ Rather than emphasizing individual technologies, the platform demonstrates how t
 ---
 
 # Contact
-
-**Tejas Jaggi**
-
-Master of Science in Information Management (MSIM)
-
-University of Illinois Urbana-Champaign
-
-📧 Email: jaggitejas4@gmail.com
-
-🔗 GitHub: https://github.com/tejas-jaggi
-
-🔗 LinkedIn: https://www.linkedin.com/in/tejas-jaggi-a55134221
+ 
+**[Tejas Jaggi]** — [jaggitejas4@gmail.com.com](mailto:jaggitejas4@gmail.com.com)
+[LinkedIn](https://www.linkedin.com/in/tejas-jaggi/) · [Portfolio](https://tejas-jaggi.github.io/) · [GitHub](https://github.com/tejas-jaggi/)
 
 ---
 
